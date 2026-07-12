@@ -1,18 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  { label: "Contact", href: "/contact" },
-];
+import { SECTIONS, useSection } from "./SectionContext";
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const { activeId, setActiveId } = useSection();
 
   return (
     <aside className="flex w-full flex-col md:w-64">
@@ -30,25 +22,23 @@ export default function Sidebar() {
       </h1>
       <p className="mt-1 text-lg text-zinc-500">Software Engineer</p>
 
-      <nav className="mt-12 flex flex-col gap-6">
-        {navItems.map((item) => {
-          const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+      <nav className="mt-12 flex flex-col items-start gap-6">
+        {SECTIONS.map((item) => {
+          const isActive = activeId === item.id;
 
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`text-xl transition-colors ${
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setActiveId(item.id)}
+              className={`text-left text-xl transition-colors ${
                 isActive
                   ? "font-bold text-white"
                   : "text-zinc-500 hover:text-zinc-300"
               }`}
             >
               {item.label}
-            </Link>
+            </button>
           );
         })}
       </nav>
