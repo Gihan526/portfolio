@@ -51,7 +51,7 @@ export default function RootLayout({
                 className="object-cover object-[center_30%] select-none"
               />
             </div>
-            <div className="relative mx-auto -mt-10 flex w-full max-w-5xl min-h-0 flex-1 flex-col gap-6 px-6 pb-6 md:flex-row md:gap-12 md:pb-10">
+            <div className="relative mx-auto -mt-10 flex w-full max-w-[90rem] min-h-0 flex-1 flex-col gap-6 px-6 pb-6 md:flex-row md:gap-12 md:pb-10">
               <div className="shrink-0 md:h-fit">
                 <Sidebar />
               </div>

@@ -66,36 +66,75 @@ function AboutSection() {
       <h2 className="mb-6 text-2xl font-bold tracking-tight text-white">
         About
       </h2>
-      <p className="max-w-2xl text-lg leading-relaxed text-zinc-300">
-        What first got me into programming was machine learning. I started
-        teaching myself Python because I was curious about how models actually
-        learn from data, rather than just using a library without understanding
-        what was happening underneath. That curiosity pushed me to implement the
-        UMAP algorithm from scratch, which meant working through the maths,
-        nearest-neighbour logic, and plenty of bugs along the way. I&rsquo;m
-        still learning machine learning and AI independently, mostly by building
-        projects that show me what I understand and what I need to improve.
-      </p>
-      <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-300">
-        That same curiosity later led me into full-stack development and
-        hackathons, where I learned to turn ideas into working projects under
-        pressure. My teams went on to win first place at a university hackathon
-        and receive the Most Innovative Concept award at the Hemas AIthon.
-      </p>
+      <div className="grid gap-16 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div>
+          <p className="text-lg leading-relaxed text-zinc-300">
+            What first got me into programming was machine learning. I started
+            teaching myself Python because I was curious about how models
+            actually learn from data, rather than just using a library without
+            understanding what was happening underneath. That curiosity pushed
+            me to implement the UMAP algorithm from scratch, which meant working
+            through the maths, nearest-neighbour logic, and plenty of bugs along
+            the way. I&rsquo;m still learning machine learning and AI
+            independently, mostly by building projects that show me what I
+            understand and what I need to improve.
+          </p>
+          <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+            That same curiosity later led me into full-stack development and
+            hackathons, where I learned to turn ideas into working projects
+            under pressure. My teams went on to win first place at a university
+            hackathon and receive the Most Innovative Concept award at the Hemas
+            AIthon.
+          </p>
+        </div>
+
+        <dl className="space-y-4 text-sm lg:border-l lg:border-zinc-800 lg:pl-6">
+          {SKILLS.map((group) => (
+            <div key={group.label}>
+              <dt className="mb-1 text-xs uppercase tracking-wider text-zinc-500">
+                {group.label}
+              </dt>
+              <dd className="text-zinc-300">{group.items}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </>
   );
 }
+
+const SKILLS = [
+  {
+    label: "Languages",
+    items: "Python, JavaScript, TypeScript, SQL, Bash, Rust",
+  },
+  {
+    label: "Frameworks",
+    items: "React, Next.js, Node.js, Express, Tailwind CSS, Socket.IO",
+  },
+  { label: "AI / Data", items: "Pandas, Scikit-learn" },
+  { label: "Databases", items: "PostgreSQL, MySQL, SQLite, Redis" },
+  { label: "Cloud", items: "AWS Cloud Foundations" },
+];
 
 const PROJECTS = [
   {
     name: "shell-chat",
     href: "https://github.com/Gihan526/shell-chat",
+    description: "Real-time terminal chat app with a TUI client and server.",
     tags: ["TS", "Bun"],
   },
   {
     name: "umap-algorithm-from-scratch",
     href: "https://github.com/Gihan526/umap-algorithm-from-scratch",
+    description: "UMAP dimensionality-reduction algorithm implemented from scratch.",
     tags: ["Python", "ML"],
+  },
+  {
+    name: "leetcode-discord-rich-presence",
+    href: "https://github.com/Gihan526/leetcode-discord-rich-presence",
+    description: "Shows your current LeetCode problem as a Discord status.",
+    tags: ["JS", "Node.js"],
   },
 ];
 
@@ -107,25 +146,28 @@ function ProjectsSection() {
       </h2>
       <ul className="max-w-2xl space-y-3 text-lg leading-relaxed text-zinc-300">
         {PROJECTS.map((project) => (
-          <li key={project.href} className="flex items-center gap-3">
-            <a
-              href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline underline-offset-4 transition-colors hover:text-white"
-            >
-              {project.name}
-            </a>
-            <span className="flex gap-1.5">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-zinc-800 px-2 py-0.5 text-xs text-zinc-500"
-                >
-                  {tag}
-                </span>
-              ))}
-            </span>
+          <li key={project.href}>
+            <div className="flex items-center gap-3">
+              <a
+                href={project.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-4 transition-colors hover:text-white"
+              >
+                {project.name}
+              </a>
+              <span className="flex gap-1.5">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-zinc-800 px-2 py-0.5 text-xs text-zinc-500"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </span>
+            </div>
+            <p className="mt-1 text-sm text-zinc-500">{project.description}</p>
           </li>
         ))}
       </ul>
