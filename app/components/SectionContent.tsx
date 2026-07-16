@@ -4,15 +4,13 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
-  IconChevronLeft,
-  IconChevronRight,
   IconMail,
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { SectionId, useSection } from "./SectionContext";
 
 const SWAP_MS = 300;
-const SWIPE = 60; // px of finger travel that counts as a swipe
+const SWIPE = 60; // px of horizontal travel that counts as a swipe
 
 function HomeSection() {
   return (
@@ -188,21 +186,13 @@ export default function SectionContent() {
   const { activeId, go } = useSection();
   const [shownId, setShownId] = useState<SectionId>(activeId);
   const [visible, setVisible] = useState(true);
-  const [showHint, setShowHint] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<SectionId>(activeId);
-
-  // Auto-hide the swipe hint after a few seconds.
-  useEffect(() => {
-    const t = window.setTimeout(() => setShowHint(false), 5000);
-    return () => window.clearTimeout(t);
-  }, []);
 
   // Fade the current content out, swap it, reset scroll, then fade the new one in.
   useEffect(() => {
     if (activeId === prevActiveIdRef.current) return;
     prevActiveIdRef.current = activeId;
-    setShowHint(false);
 
     setVisible(false);
     const swap = window.setTimeout(() => {
@@ -218,7 +208,10 @@ export default function SectionContent() {
     return () => window.clearTimeout(swap);
   }, [activeId]);
 
-  // Every section is a fixed slide; wheel / keys / horizontal swipe change section.
+  // Every section is a fixed slide; wheel / keys change section on desktop.
+  // On touch devices vertical gestures scroll the content (native pan-y), and
+  // horizontal swipes switch tabs. A gesture only switches when horizontal
+  // travel dominates, so reading scrolls instead of switching.
   useEffect(() => {
     let cooling = false;
     const cool = () => {
@@ -242,15 +235,18 @@ export default function SectionContent() {
       go(down ? 1 : -1);
     };
 
-    // Horizontal swipe changes section; vertical gestures are ignored.
     let startX = 0;
+    let startY = 0;
     const onTouchStart = (e: TouchEvent) => {
       startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
     };
     const onTouchEnd = (e: TouchEvent) => {
       if (cooling) return;
       const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
       if (Math.abs(dx) < SWIPE) return;
+      if (Math.abs(dx) <= Math.abs(dy)) return; // mostly vertical -> scroll
       cool();
       go(dx < 0 ? 1 : -1); // swipe left -> next, swipe right -> previous
     };
@@ -269,7 +265,10 @@ export default function SectionContent() {
 
   return (
     <div className="relative h-full">
-      <div ref={scrollRef} className="h-full overflow-hidden">
+      <div
+        ref={scrollRef}
+        className="h-full overflow-y-auto overscroll-contain touch-pan-y md:overflow-hidden"
+      >
         <div
           className={`transition-all ease-out ${
             visible
@@ -279,28 +278,6 @@ export default function SectionContent() {
           style={{ transitionDuration: `${SWAP_MS}ms` }}
         >
           {CONTENT[shownId]}
-        </div>
-      </div>
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-700 ease-out md:hidden ${
-          showHint ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div className="flex items-center gap-2">
-          <IconChevronLeft
-            size={16}
-            stroke={2}
-            className="swipe-hint-left text-zinc-500"
-          />
-          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
-            swipe
-          </span>
-          <IconChevronRight
-            size={16}
-            stroke={2}
-            className="swipe-hint-right text-zinc-500"
-          />
         </div>
       </div>
     </div>
