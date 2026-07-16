@@ -105,6 +105,14 @@ export default function Sidebar() {
             </button>
           );
         })}
+
+        <a
+          href="/Gihan_Resume.pdf"
+          download
+          className="py-2.5 text-left text-base text-zinc-500 transition-colors hover:text-zinc-300 md:py-0 md:text-xl"
+        >
+          Resume
+        </a>
       </nav>
     </aside>
   );

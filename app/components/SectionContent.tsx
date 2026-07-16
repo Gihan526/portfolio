@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  IconArrowUpRight,
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
@@ -138,35 +139,34 @@ const PROJECTS = [
 
 function ProjectsSection() {
   return (
-    <>
-      <ul className="max-w-2xl space-y-3 text-lg leading-relaxed text-zinc-300">
-        {PROJECTS.map((project) => (
-          <li key={project.href}>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <a
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 transition-colors hover:text-white"
-              >
-                {project.name}
-              </a>
-              <span className="flex gap-1.5">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-zinc-800 px-2 py-0.5 text-xs text-zinc-500"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </span>
-            </div>
-            <p className="mt-1 text-sm text-zinc-500">{project.description}</p>
-          </li>
-        ))}
-      </ul>
-    </>
+    <ol className="max-w-2xl space-y-10">
+      {PROJECTS.map((project) => (
+        <li key={project.href} className="group">
+          <a
+            href={project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/link flex items-center gap-x-2.5"
+          >
+            <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
+              {project.name}
+            </h3>
+            <span className="font-mono text-xs text-zinc-500">
+              {project.tags.join(" · ")}
+            </span>
+            <IconArrowUpRight
+              size={16}
+              stroke={2}
+              aria-hidden="true"
+              className="shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300"
+            />
+          </a>
+          <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
+            {project.description}
+          </p>
+        </li>
+      ))}
+    </ol>
   );
 }
 
