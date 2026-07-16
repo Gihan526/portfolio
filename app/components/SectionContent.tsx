@@ -146,7 +146,7 @@ function ProjectsSection() {
             href={project.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="group/link flex items-center gap-x-2.5"
+            className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
           >
             <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
               {project.name}
@@ -158,7 +158,7 @@ function ProjectsSection() {
               size={16}
               stroke={2}
               aria-hidden="true"
-              className="shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300"
+              className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
             />
           </a>
           <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
