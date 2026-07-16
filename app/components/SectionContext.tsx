@@ -19,7 +19,6 @@ export type SectionId = (typeof SECTIONS)[number]["id"];
 type SectionContextValue = {
   activeId: SectionId;
   setActiveId: (id: SectionId) => void;
-  go: (delta: number) => void;
 };
 
 const SectionContext = createContext<SectionContextValue | null>(null);
@@ -33,18 +32,14 @@ export function useSection() {
 export function SectionProvider({ children }: { children: React.ReactNode }) {
   const [index, setIndex] = useState(0);
 
-  const go = useCallback((delta: number) => {
-    setIndex((i) => Math.min(SECTIONS.length - 1, Math.max(0, i + delta)));
-  }, []);
-
   const setActiveId = useCallback((id: SectionId) => {
     const next = SECTIONS.findIndex((s) => s.id === id);
     if (next !== -1) setIndex(next);
   }, []);
 
   const value = useMemo(
-    () => ({ activeId: SECTIONS[index].id, setActiveId, go }),
-    [index, setActiveId, go]
+    () => ({ activeId: SECTIONS[index].id, setActiveId }),
+    [index, setActiveId]
   );
 
   return (

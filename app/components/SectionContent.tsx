@@ -7,7 +7,7 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
-import { SectionId, useSection } from "./SectionContext";
+import { SECTIONS, SectionId, useSection } from "./SectionContext";
 
 const SWAP_MS = 300;
 const SWIPE = 60; // px of horizontal travel that counts as a swipe
@@ -64,9 +64,6 @@ function HomeSection() {
 function AboutSection() {
   return (
     <>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight text-white">
-        About
-      </h2>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
         <div>
           <p className="text-lg leading-relaxed text-zinc-300">
@@ -142,9 +139,6 @@ const PROJECTS = [
 function ProjectsSection() {
   return (
     <>
-      <h2 className="mb-6 text-2xl font-bold tracking-tight text-white">
-        Projects
-      </h2>
       <ul className="max-w-2xl space-y-3 text-lg leading-relaxed text-zinc-300">
         {PROJECTS.map((project) => (
           <li key={project.href}>
@@ -183,56 +177,20 @@ const CONTENT: Record<SectionId, React.ReactNode> = {
 };
 
 export default function SectionContent() {
-  const { activeId, go } = useSection();
+  const { activeId, setActiveId } = useSection();
   const [shownId, setShownId] = useState<SectionId>(activeId);
   const [visible, setVisible] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
   const prevActiveIdRef = useRef<SectionId>(activeId);
 
-  // Fade the current content out, swap it, reset scroll, then fade the new one in.
-  useEffect(() => {
-    if (activeId === prevActiveIdRef.current) return;
-    prevActiveIdRef.current = activeId;
-
-    setVisible(false);
-    const swap = window.setTimeout(() => {
-      setShownId(activeId);
-      if (scrollRef.current) scrollRef.current.scrollTop = 0;
-      // Paint the incoming content in its hidden state first, then reveal it
-      // on the next frame so the transition actually plays.
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => setVisible(true))
-      );
-    }, SWAP_MS);
-
-    return () => window.clearTimeout(swap);
-  }, [activeId]);
-
-  // Every section is a fixed slide; wheel / keys change section on desktop.
-  // On touch devices vertical gestures scroll the content (native pan-y), and
-  // horizontal swipes switch tabs. A gesture only switches when horizontal
-  // travel dominates, so reading scrolls instead of switching.
+  // Horizontal swipe changes section on touch devices. Vertical gestures are
+  // left to native scrolling; a gesture only switches when horizontal travel
+  // dominates, so reading still scrolls instead of jumping sections.
   useEffect(() => {
     let cooling = false;
     const cool = () => {
       cooling = true;
       window.setTimeout(() => (cooling = false), 800);
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault(); // page itself never scrolls
-      if (cooling || Math.abs(e.deltaY) < 12) return;
-      cool();
-      go(e.deltaY > 0 ? 1 : -1);
-    };
-
-    const onKey = (e: KeyboardEvent) => {
-      if (cooling) return;
-      const down = e.key === "ArrowDown" || e.key === "PageDown";
-      const up = e.key === "ArrowUp" || e.key === "PageUp";
-      if (!down && !up) return;
-      cool();
-      go(down ? 1 : -1);
     };
 
     let startX = 0;
@@ -247,27 +205,45 @@ export default function SectionContent() {
       const dy = e.changedTouches[0].clientY - startY;
       if (Math.abs(dx) < SWIPE) return;
       if (Math.abs(dx) <= Math.abs(dy)) return; // mostly vertical -> scroll
+
+      const currentIndex = SECTIONS.findIndex((s) => s.id === activeId);
+      const nextIndex = dx < 0 ? currentIndex + 1 : currentIndex - 1;
+      if (nextIndex < 0 || nextIndex >= SECTIONS.length) return;
+
       cool();
-      go(dx < 0 ? 1 : -1); // swipe left -> next, swipe right -> previous
+      setActiveId(SECTIONS[nextIndex].id);
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKey);
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKey);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchend", onTouchEnd);
     };
-  }, [go]);
+  }, [activeId, setActiveId]);
+
+  // Fade the current content out, swap it, reset scroll, then fade the new one in.
+  useEffect(() => {
+    if (activeId === prevActiveIdRef.current) return;
+    prevActiveIdRef.current = activeId;
+
+    setVisible(false);
+    const swap = window.setTimeout(() => {
+      setShownId(activeId);
+      if (scrollRef.current) scrollRef.current.scrollTop = 0;
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => setVisible(true))
+      );
+    }, SWAP_MS);
+
+    return () => window.clearTimeout(swap);
+  }, [activeId]);
 
   return (
     <div className="relative h-full">
       <div
         ref={scrollRef}
-        className="h-full overflow-y-auto overscroll-contain touch-pan-y md:overflow-hidden"
+        className="h-full overflow-y-auto overscroll-contain"
       >
         <div
           className={`transition-all ease-out ${
