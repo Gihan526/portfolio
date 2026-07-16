@@ -29,3 +29,35 @@ body {
 *::-webkit-scrollbar {
   display: none; /* Chrome/Safari */
 }
+
+@keyframes swipe-left {
+  0%,
+  100% {
+    transform: translateX(3px);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateX(-3px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes swipe-right {
+  0%,
+  100% {
+    transform: translateX(-3px);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateX(3px);
+    opacity: 0.7;
+  }
+}
+
+.swipe-hint-left {
+  animation: swipe-left 1.8s ease-out infinite;
+}
+
+.swipe-hint-right {
+  animation: swipe-right 1.8s ease-out 0.9s infinite;
+}

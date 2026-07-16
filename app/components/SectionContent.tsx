@@ -4,12 +4,15 @@ import {
   IconBrandGithub,
   IconBrandLinkedin,
   IconBrandX,
+  IconChevronLeft,
+  IconChevronRight,
   IconMail,
 } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { SectionId, useSection } from "./SectionContext";
 
 const SWAP_MS = 300;
+const SWIPE = 60; // px of finger travel that counts as a swipe
 
 function HomeSection() {
   return (
@@ -26,7 +29,7 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"
-          className="text-zinc-400 transition-colors hover:text-white"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
         >
           <IconBrandGithub size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -35,7 +38,7 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
-          className="text-zinc-400 transition-colors hover:text-white"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
         >
           <IconBrandLinkedin size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -44,14 +47,14 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="X"
-          className="text-zinc-400 transition-colors hover:text-white"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
         >
           <IconBrandX size={24} stroke={2} aria-hidden="true" />
         </a>
         <a
           href="mailto:gihanariyasena526@gmail.com"
           aria-label="Email"
-          className="text-zinc-400 transition-colors hover:text-white"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
         >
           <IconMail size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -66,7 +69,7 @@ function AboutSection() {
       <h2 className="mb-6 text-2xl font-bold tracking-tight text-white">
         About
       </h2>
-      <div className="grid gap-16 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
         <div>
           <p className="text-lg leading-relaxed text-zinc-300">
             What first got me into programming was machine learning. I started
@@ -147,7 +150,7 @@ function ProjectsSection() {
       <ul className="max-w-2xl space-y-3 text-lg leading-relaxed text-zinc-300">
         {PROJECTS.map((project) => (
           <li key={project.href}>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <a
                 href={project.href}
                 target="_blank"
@@ -175,31 +178,31 @@ function ProjectsSection() {
   );
 }
 
-function ContactSection() {
-  return (
-    <h2 className="text-2xl font-bold tracking-tight text-white">Contact</h2>
-  );
-}
-
 const CONTENT: Record<SectionId, React.ReactNode> = {
   home: <HomeSection />,
   about: <AboutSection />,
   projects: <ProjectsSection />,
-  contact: <ContactSection />,
 };
-
-const EDGE = 2; // px tolerance for "at top/bottom" of the scroll area
-const SWIPE = 60; // px of finger travel that counts as a swipe
 
 export default function SectionContent() {
   const { activeId, go } = useSection();
   const [shownId, setShownId] = useState<SectionId>(activeId);
   const [visible, setVisible] = useState(true);
+  const [showHint, setShowHint] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const prevActiveIdRef = useRef<SectionId>(activeId);
+
+  // Auto-hide the swipe hint after a few seconds.
+  useEffect(() => {
+    const t = window.setTimeout(() => setShowHint(false), 5000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   // Fade the current content out, swap it, reset scroll, then fade the new one in.
   useEffect(() => {
-    if (activeId === shownId) return;
+    if (activeId === prevActiveIdRef.current) return;
+    prevActiveIdRef.current = activeId;
+    setShowHint(false);
 
     setVisible(false);
     const swap = window.setTimeout(() => {
@@ -213,9 +216,9 @@ export default function SectionContent() {
     }, SWAP_MS);
 
     return () => window.clearTimeout(swap);
-  }, [activeId, shownId]);
+  }, [activeId]);
 
-  // Scroll the panel first; only swap sections once it's at the top/bottom edge.
+  // Every section is a fixed slide; wheel / keys / horizontal swipe change section.
   useEffect(() => {
     let cooling = false;
     const cool = () => {
@@ -223,60 +226,33 @@ export default function SectionContent() {
       window.setTimeout(() => (cooling = false), 800);
     };
 
-    const atTop = (el: HTMLElement) => el.scrollTop <= EDGE;
-    const atBottom = (el: HTMLElement) =>
-      el.scrollTop + el.clientHeight >= el.scrollHeight - EDGE;
-
     const onWheel = (e: WheelEvent) => {
-      const el = scrollRef.current;
-      if (!el) return;
-      e.preventDefault(); // page itself never scrolls; we drive it manually
-      const down = e.deltaY > 0;
-
-      if (down ? !atBottom(el) : !atTop(el)) {
-        // Line-mode wheels report tiny deltas; scale them to feel like pixels.
-        el.scrollTop += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
-        return;
-      }
+      e.preventDefault(); // page itself never scrolls
       if (cooling || Math.abs(e.deltaY) < 12) return;
+      cool();
+      go(e.deltaY > 0 ? 1 : -1);
+    };
+
+    const onKey = (e: KeyboardEvent) => {
+      if (cooling) return;
+      const down = e.key === "ArrowDown" || e.key === "PageDown";
+      const up = e.key === "ArrowUp" || e.key === "PageUp";
+      if (!down && !up) return;
       cool();
       go(down ? 1 : -1);
     };
 
-    const onKey = (e: KeyboardEvent) => {
-      const el = scrollRef.current;
-      if (!el || cooling) return;
-      const down = e.key === "ArrowDown" || e.key === "PageDown";
-      const up = e.key === "ArrowUp" || e.key === "PageUp";
-      if (!down && !up) return;
-      if (down ? atBottom(el) : atTop(el)) {
-        cool();
-        go(down ? 1 : -1);
-      }
-    };
-
-    // Touch: let the panel scroll natively; a swipe past an edge changes section.
-    let startY = 0;
-    let fromTop = false;
-    let fromBottom = false;
+    // Horizontal swipe changes section; vertical gestures are ignored.
+    let startX = 0;
     const onTouchStart = (e: TouchEvent) => {
-      const el = scrollRef.current;
-      if (!el) return;
-      startY = e.touches[0].clientY;
-      fromTop = atTop(el);
-      fromBottom = atBottom(el);
+      startX = e.touches[0].clientX;
     };
     const onTouchEnd = (e: TouchEvent) => {
-      const el = scrollRef.current;
-      if (!el || cooling) return;
-      const dy = e.changedTouches[0].clientY - startY;
-      if (dy < -SWIPE && fromBottom && atBottom(el)) {
-        cool();
-        go(1);
-      } else if (dy > SWIPE && fromTop && atTop(el)) {
-        cool();
-        go(-1);
-      }
+      if (cooling) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) < SWIPE) return;
+      cool();
+      go(dx < 0 ? 1 : -1); // swipe left -> next, swipe right -> previous
     };
 
     window.addEventListener("wheel", onWheel, { passive: false });
@@ -292,16 +268,40 @@ export default function SectionContent() {
   }, [go]);
 
   return (
-    <div ref={scrollRef} className="h-full overflow-y-auto overscroll-contain">
+    <div className="relative h-full">
+      <div ref={scrollRef} className="h-full overflow-hidden">
+        <div
+          className={`transition-all ease-out ${
+            visible
+              ? "opacity-100 blur-0 translate-y-0"
+              : "opacity-0 blur-sm translate-y-3"
+          }`}
+          style={{ transitionDuration: `${SWAP_MS}ms` }}
+        >
+          {CONTENT[shownId]}
+        </div>
+      </div>
       <div
-        className={`transition-all ease-out ${
-          visible
-            ? "opacity-100 blur-0 translate-y-0"
-            : "opacity-0 blur-sm translate-y-3"
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 z-10 flex items-center justify-center transition-opacity duration-700 ease-out md:hidden ${
+          showHint ? "opacity-100" : "opacity-0"
         }`}
-        style={{ transitionDuration: `${SWAP_MS}ms` }}
       >
-        {CONTENT[shownId]}
+        <div className="flex items-center gap-2">
+          <IconChevronLeft
+            size={16}
+            stroke={2}
+            className="swipe-hint-left text-zinc-500"
+          />
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-zinc-500">
+            swipe
+          </span>
+          <IconChevronRight
+            size={16}
+            stroke={2}
+            className="swipe-hint-right text-zinc-500"
+          />
+        </div>
       </div>
     </div>
   );
