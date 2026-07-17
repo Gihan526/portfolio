@@ -19,6 +19,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Gihan Ariyasena",
   description: "Portfolio of Gihan Ariyasena",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
