@@ -7,13 +7,20 @@ import {
   IconBrandX,
   IconMail,
 } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
+import Image, { StaticImageData } from "next/image";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import privateChatImg from "@/public/private-chat.png";
+import umapImg from "@/public/G73FNmcbsAALdDn.jpg";
+import leetcodeDiscordImg from "@/public/SCR-20260719-txef.png";
+import { createPortal } from "react-dom";
 import { SECTIONS, SectionId, useSection } from "./SectionContext";
 
 const SWAP_MS = 300;
 const SWIPE = 60; // px of horizontal travel that counts as a swipe
 
 function HomeSection() {
+  const { setActiveId } = useSection();
+
   return (
     <>
       <p className="max-w-2xl text-lg leading-relaxed text-zinc-300">
@@ -58,7 +65,62 @@ function HomeSection() {
           <IconMail size={24} stroke={2} aria-hidden="true" />
         </a>
       </div>
+
+      <div className="mt-10 max-w-2xl border-t border-white/10 pt-8">
+        <h2 className="text-xs uppercase tracking-wider text-zinc-500">
+          Currently
+        </h2>
+        <div className="group mt-4">
+          <a
+            href="https://github.com/Gihan526/tsql"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
+          >
+            <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
+              tsql
+            </h3>
+            <span className="font-mono text-xs text-zinc-500">
+              TS · from scratch
+            </span>
+            <IconArrowUpRight
+              size={16}
+              stroke={2}
+              aria-hidden="true"
+              className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
+            />
+          </a>
+          <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
+            Building a SQL database engine from scratch in TypeScript:
+            storage, parsing, and query execution.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setActiveId("projects")}
+          className="group mt-8 inline-flex items-center gap-1.5 rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
+        >
+          Know More
+          <IconArrowUpRight
+            size={16}
+            stroke={2}
+            aria-hidden="true"
+            className="text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300"
+          />
+        </button>
+      </div>
     </>
+  );
+}
+
+// Recruiter-relevant keyword: faint dotted underline at rest, solid
+// underline + subtle highlight on hover.
+function Kw({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="cursor-default rounded-sm px-0.5 font-medium text-zinc-100 underline decoration-zinc-600 decoration-dotted decoration-1 underline-offset-[5px] transition-all duration-300 hover:bg-white/5 hover:text-white hover:decoration-zinc-300 hover:decoration-solid">
+      {children}
+    </span>
   );
 }
 
@@ -68,22 +130,20 @@ function AboutSection() {
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
         <div>
           <p className="text-lg leading-relaxed text-zinc-300">
-            What first got me into programming was machine learning. I started
-            teaching myself Python because I was curious about how models
-            actually learn from data, rather than just using a library without
-            understanding what was happening underneath. That curiosity pushed
-            me to implement the UMAP algorithm from scratch, which meant working
-            through the maths, nearest-neighbour logic, and plenty of bugs along
-            the way. I&rsquo;m still learning machine learning and AI
-            independently, mostly by building projects that show me what I
-            understand and what I need to improve.
+            I got into programming through <Kw>machine learning</Kw>: I
+            taught myself <Kw>Python</Kw>{" "}to understand how models actually
+            learn from data, not just how to call a library. That curiosity
+            pushed me to implement the UMAP algorithm from scratch, maths,
+            nearest-neighbour logic, bugs and all. I&rsquo;m still learning
+            ML and AI on my own, mostly by building projects that show me
+            what I understand and what to improve.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-zinc-300">
-            That same curiosity later led me into full-stack development and
-            hackathons, where I learned to turn ideas into working projects
-            under pressure. My teams went on to win first place at a university
-            hackathon and receive the Most Innovative Concept award at the Hemas
-            AIthon.
+            The same curiosity led me to <Kw>full-stack development</Kw>{" "}
+            and <Kw>hackathons</Kw>, where I learned to ship working ideas
+            under pressure. My teams went on to win <Kw>first place</Kw>{" "}at
+            a university hackathon and the <Kw>Most Innovative Concept</Kw>{" "}
+            award at the Hemas AIthon.
           </p>
         </div>
 
@@ -122,48 +182,107 @@ const PROJECTS = [
     href: "https://github.com/Gihan526/shell-chat",
     description: "Real-time terminal chat app with a TUI client and server.",
     tags: ["TS", "Bun"],
+    image: privateChatImg,
   },
   {
     name: "umap-algorithm-from-scratch",
     href: "https://github.com/Gihan526/umap-algorithm-from-scratch",
     description: "UMAP dimensionality-reduction algorithm implemented from scratch.",
     tags: ["Python", "ML"],
+    image: umapImg,
   },
   {
     name: "leetcode-discord-rich-presence",
     href: "https://github.com/Gihan526/leetcode-discord-rich-presence",
     description: "Shows your current LeetCode problem as a Discord status.",
     tags: ["JS", "Node.js"],
+    image: leetcodeDiscordImg,
   },
 ];
+
+function useIsClient() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
+function ProjectHoverImage({
+  src,
+  alt,
+  children,
+}: {
+  src: StaticImageData;
+  alt: string;
+  children: React.ReactNode;
+}) {
+  const [hovered, setHovered] = useState(false);
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+  const isClient = useIsClient();
+
+  return (
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
+      className="w-fit"
+    >
+      {children}
+      {isClient &&
+        hovered &&
+        createPortal(
+          <div
+            className="pointer-events-none fixed z-50 w-72 overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/50 sm:w-80"
+            style={{
+              left: 0,
+              top: 0,
+              transform: `translate3d(${pos.x + 16}px, ${pos.y - 100}px, 0)`,
+            }}
+          >
+            <Image
+              src={src}
+              alt={alt}
+              sizes="(max-width: 640px) 288px, 320px"
+              style={{ width: "100%", height: "auto" }}
+              className="block"
+            />
+          </div>,
+          document.body
+        )}
+    </div>
+  );
+}
 
 function ProjectsSection() {
   return (
     <ol className="max-w-2xl space-y-10">
       {PROJECTS.map((project) => (
         <li key={project.href} className="group">
-          <a
-            href={project.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
-          >
-            <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
-              {project.name}
-            </h3>
-            <span className="font-mono text-xs text-zinc-500">
-              {project.tags.join(" · ")}
-            </span>
-            <IconArrowUpRight
-              size={16}
-              stroke={2}
-              aria-hidden="true"
-              className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
-            />
-          </a>
-          <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
-            {project.description}
-          </p>
+          <ProjectHoverImage src={project.image} alt={project.name}>
+            <a
+              href={project.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
+            >
+              <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
+                {project.name}
+              </h3>
+              <span className="font-mono text-xs text-zinc-500">
+                {project.tags.join(" · ")}
+              </span>
+              <IconArrowUpRight
+                size={16}
+                stroke={2}
+                aria-hidden="true"
+                className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
+              />
+            </a>
+            <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
+              {project.description}
+            </p>
+          </ProjectHoverImage>
         </li>
       ))}
     </ol>

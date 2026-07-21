@@ -1,5 +1,6 @@
 "use client";
 
+import { IconMapPin } from "@tabler/icons-react";
 import Image from "next/image";
 import { useLayoutEffect, useRef, useState } from "react";
 import { SECTIONS, useSection } from "./SectionContext";
@@ -56,6 +57,15 @@ export default function Sidebar() {
           </h1>
           <p className="mt-0.5 truncate text-sm text-zinc-500 md:mt-1 md:text-lg">
             Software Engineer
+          </p>
+          <p className="mt-1 flex items-center gap-1 text-xs text-zinc-500 md:text-sm">
+            <IconMapPin
+              size={14}
+              stroke={2}
+              aria-hidden="true"
+              className="shrink-0"
+            />
+            Sri Lanka
           </p>
         </div>
       </div>
