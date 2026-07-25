@@ -19,8 +19,6 @@ const SWAP_MS = 300;
 const SWIPE = 60; // px of horizontal travel that counts as a swipe
 
 function HomeSection() {
-  const { setActiveId } = useSection();
-
   return (
     <>
       <p className="max-w-2xl text-lg leading-relaxed text-zinc-300">
@@ -64,51 +62,6 @@ function HomeSection() {
         >
           <IconMail size={24} stroke={2} aria-hidden="true" />
         </a>
-      </div>
-
-      <div className="mt-10 max-w-2xl border-t border-white/10 pt-8">
-        <h2 className="text-xs uppercase tracking-wider text-zinc-500">
-          Currently
-        </h2>
-        <div className="group mt-4">
-          <a
-            href="https://github.com/Gihan526/tsql"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
-          >
-            <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
-              tsql
-            </h3>
-            <span className="font-mono text-xs text-zinc-500">
-              TS · from scratch
-            </span>
-            <IconArrowUpRight
-              size={16}
-              stroke={2}
-              aria-hidden="true"
-              className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
-            />
-          </a>
-          <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
-            Building a SQL database engine from scratch in TypeScript:
-            storage, parsing, and query execution.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setActiveId("projects")}
-          className="group mt-8 inline-flex items-center gap-1.5 rounded-full border border-zinc-800 px-4 py-2 text-sm text-zinc-300 transition-colors hover:border-zinc-500 hover:text-white"
-        >
-          Know More
-          <IconArrowUpRight
-            size={16}
-            stroke={2}
-            aria-hidden="true"
-            className="text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300"
-          />
-        </button>
       </div>
     </>
   );
