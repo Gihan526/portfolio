@@ -21,7 +21,7 @@ const SWIPE = 60; // px of horizontal travel that counts as a swipe
 function HomeSection() {
   return (
     <>
-      <p className="max-w-2xl text-lg leading-relaxed text-zinc-300">
+      <p className="max-w-2xl text-base leading-7 text-zinc-300 sm:text-lg sm:leading-relaxed">
         Hey, I&rsquo;m Gihan, a Computer Science student who enjoys building
         practical, reliable software with a focus on backend systems, cloud, and
         AI.
@@ -33,7 +33,7 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub"
-          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white lg:h-auto lg:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
         >
           <IconBrandGithub size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -42,7 +42,7 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"
-          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white lg:h-auto lg:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
         >
           <IconBrandLinkedin size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -51,14 +51,14 @@ function HomeSection() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="X"
-          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white lg:h-auto lg:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
         >
           <IconBrandX size={24} stroke={2} aria-hidden="true" />
         </a>
         <a
           href="mailto:gihanariyasena526@gmail.com"
           aria-label="Email"
-          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white md:h-auto md:w-auto"
+          className="inline-flex h-11 w-11 items-center justify-center text-zinc-400 transition-colors hover:text-white lg:h-auto lg:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-4 focus-visible:ring-offset-black"
         >
           <IconMail size={24} stroke={2} aria-hidden="true" />
         </a>
@@ -80,9 +80,9 @@ function Kw({ children }: { children: React.ReactNode }) {
 function AboutSection() {
   return (
     <>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-16">
+      <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_22rem] xl:gap-16">
         <div>
-          <p className="text-lg leading-relaxed text-zinc-300">
+          <p className="text-base leading-7 text-zinc-300 sm:text-lg sm:leading-relaxed">
             I got into programming through <Kw>machine learning</Kw>: I
             taught myself <Kw>Python</Kw>{" "}to understand how models actually
             learn from data, not just how to call a library. That curiosity
@@ -91,7 +91,7 @@ function AboutSection() {
             ML and AI on my own, mostly by building projects that show me
             what I understand and what to improve.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-zinc-300">
+          <p className="mt-4 text-base leading-7 text-zinc-300 sm:text-lg sm:leading-relaxed">
             The same curiosity led me to <Kw>full-stack development</Kw>{" "}
             and <Kw>hackathons</Kw>, where I learned to ship working ideas
             under pressure. My teams went on to win <Kw>first place</Kw>{" "}at
@@ -100,7 +100,7 @@ function AboutSection() {
           </p>
         </div>
 
-        <dl className="space-y-4 text-sm lg:border-l lg:border-zinc-800 lg:pl-6">
+        <dl className="space-y-4 text-sm xl:border-l xl:border-zinc-800 xl:pl-6">
           {SKILLS.map((group) => (
             <div key={group.label}>
               <dt className="mb-1 text-xs uppercase tracking-wider text-zinc-500">
@@ -176,7 +176,11 @@ function ProjectHoverImage({
 
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => {
+        if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+          setHovered(true);
+        }
+      }}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
       className="w-fit"
@@ -186,7 +190,7 @@ function ProjectHoverImage({
         hovered &&
         createPortal(
           <div
-            className="pointer-events-none fixed z-50 w-72 overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/50 sm:w-80"
+            className="project-preview pointer-events-none fixed z-50 w-72 overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/50 sm:w-80"
             style={{
               left: 0,
               top: 0,
@@ -217,9 +221,9 @@ function ProjectsSection() {
               href={project.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group/link relative flex flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
+              className="group/link relative flex min-w-0 flex-col gap-1.5 pr-5 sm:flex-row sm:items-center sm:gap-x-2.5 sm:pr-0"
             >
-              <h3 className="text-lg text-zinc-100 transition-colors group-hover:text-white">
+              <h3 className="min-w-0 break-words text-lg text-zinc-100 transition-colors group-hover:text-white">
                 {project.name}
               </h3>
               <span className="font-mono text-xs text-zinc-500">
@@ -232,7 +236,7 @@ function ProjectsSection() {
                 className="absolute right-0 top-0 mt-1.5 shrink-0 text-zinc-500 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-zinc-300 sm:static sm:mt-0"
               />
             </a>
-            <p className="mt-2 max-w-prose text-sm leading-relaxed text-zinc-500">
+            <p className="mt-2 max-w-prose text-[0.9375rem] leading-6 text-zinc-500 sm:text-sm sm:leading-relaxed">
               {project.description}
             </p>
           </ProjectHoverImage>
@@ -303,6 +307,9 @@ export default function SectionContent() {
     const swap = window.setTimeout(() => {
       setShownId(activeId);
       if (scrollRef.current) scrollRef.current.scrollTop = 0;
+      if (window.matchMedia("(max-width: 1023px)").matches) {
+        window.scrollTo(0, 0);
+      }
       requestAnimationFrame(() =>
         requestAnimationFrame(() => setVisible(true))
       );
@@ -312,13 +319,13 @@ export default function SectionContent() {
   }, [activeId]);
 
   return (
-    <div className="relative h-full">
+    <div className="relative lg:h-full">
       <div
         ref={scrollRef}
-        className="h-full overflow-y-auto overscroll-contain"
+        className="h-auto overscroll-auto lg:h-full lg:overflow-y-auto lg:overscroll-contain"
       >
         <div
-          className={`transition-all ease-out ${
+          className={`transition-all ease-out motion-reduce:transform-none motion-reduce:blur-none motion-reduce:transition-none ${
             visible
               ? "opacity-100 blur-0 translate-y-0"
               : "opacity-0 blur-sm translate-y-3"

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import Image from "next/image";
@@ -25,6 +25,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "dark",
+  themeColor: "#0a0a0a",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -35,12 +40,12 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="h-full overflow-hidden overscroll-none bg-black text-white">
+      <body className="min-h-dvh overflow-x-hidden bg-black text-white lg:overflow-hidden">
         <SectionProvider>
-          <div className="flex h-full flex-col">
+          <div className="flex min-h-dvh flex-col lg:h-dvh">
             <div className="relative">
               <div
-                className="relative h-[32vh] min-h-56 w-full shrink-0 overflow-hidden md:h-[44vh] md:min-h-80"
+                className="hero-art relative h-[clamp(10rem,32dvh,28rem)] w-full shrink-0 overflow-hidden lg:h-[clamp(18rem,44dvh,40rem)]"
                 style={{
                   maskImage:
                     "linear-gradient(to bottom, black 20%, rgba(0,0,0,0.7) 48%, rgba(0,0,0,0.35) 68%, rgba(0,0,0,0.12) 85%, transparent 100%)",
@@ -59,7 +64,7 @@ export default function RootLayout({
               </div>
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 z-20 flex justify-center md:hidden"
+                className="pointer-events-none absolute inset-x-0 z-20 flex justify-center lg:hidden"
                 style={{ top: "55%" }}
               >
                 <div className="flex items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-sm">
@@ -79,11 +84,11 @@ export default function RootLayout({
                 </div>
               </div>
             </div>
-            <div className="relative mx-auto -mt-10 flex w-full max-w-360 min-h-0 flex-1 flex-col gap-6 px-6 pb-6 md:flex-row md:gap-12 md:pb-10">
-              <div className="shrink-0 md:h-fit">
+            <div className="page-shell relative mx-auto -mt-8 flex min-h-0 w-full max-w-[90rem] flex-none flex-col gap-6 px-4 pb-6 sm:-mt-10 sm:px-6 lg:flex-1 lg:flex-row lg:gap-12 lg:pb-10 xl:gap-16">
+              <div className="min-w-0 shrink-0 lg:h-fit lg:w-64">
                 <Sidebar />
               </div>
-              <main className="min-h-0 flex-1 md:mt-30 md:border-l md:border-white/10 md:pl-12">
+              <main className="min-w-0 flex-none lg:mt-[clamp(3rem,12dvh,7.5rem)] lg:flex-1 lg:min-h-0 lg:border-l lg:border-white/10 lg:pl-12">
                 {children}
               </main>
             </div>
