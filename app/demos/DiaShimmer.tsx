@@ -26,7 +26,7 @@ const motion = Array.from({ length: 126 }, (_, index) => {
   return { offset: ms / duration, transform: `translateY(${y}px) scale(${scale})` };
 });
 
-export default function DiaShimmer() {
+function useDiaShimmer() {
   const wordRef = useRef<HTMLButtonElement>(null);
   const active = useRef<Animation[]>([]);
 
@@ -88,16 +88,46 @@ export default function DiaShimmer() {
     });
   }
 
+  return { wordRef, replay };
+}
+
+function Letters({ text }: { text: string }) {
+  return Array.from(text, (character, index) => (
+    <span className={styles.letter} key={index} aria-hidden="true">
+      <span className={styles.ink}>{character === " " ? "\u00a0" : character}</span>
+      <span className={styles.glow}>{character === " " ? "\u00a0" : character}</span>
+      <span className={styles.color}>{character === " " ? "\u00a0" : character}</span>
+    </span>
+  ));
+}
+
+export function ProfileName({ className }: { className: string }) {
+  const { wordRef, replay } = useDiaShimmer();
+
+  return (
+    <h1 id="profile-name" className={className} aria-label="Gihan Ariyasena">
+      <button
+        ref={wordRef}
+        className={`${styles.word} ${styles.profileName}`}
+        type="button"
+        onMouseEnter={replay}
+        onFocus={replay}
+        onClick={replay}
+        aria-label="Gihan Ariyasena — play text shimmer"
+      >
+        <Letters text="Gihan Ariyasena" />
+      </button>
+    </h1>
+  );
+}
+
+export default function DiaShimmer() {
+  const { wordRef, replay } = useDiaShimmer();
+
   return (
     <div className={styles.stage}>
       <button ref={wordRef} className={styles.word} type="button" onClick={replay} aria-label="Play Gihan text shimmer">
-        {Array.from("Gihan", (character, index) => (
-          <span className={styles.letter} key={index} aria-hidden="true">
-            <span className={styles.ink}>{character}</span>
-            <span className={styles.glow}>{character}</span>
-            <span className={styles.color}>{character}</span>
-          </span>
-        ))}
+        <Letters text="Gihan" />
       </button>
       <p className={styles.hint}>Click to shimmer</p>
     </div>

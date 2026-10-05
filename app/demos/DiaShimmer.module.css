@@ -23,6 +23,12 @@
   -webkit-tap-highlight-color: transparent;
 }
 .word:focus-visible { outline: 2px solid #25262b; outline-offset: 6px; border-radius: 4px; }
+.profileName {
+  padding: 0;
+  color: var(--foreground);
+  font: inherit;
+  letter-spacing: inherit;
+}
 .letter { position: relative; display: block; isolation: isolate; transform-origin: 50% 70%; }
 .ink { display: block; }
 .color, .glow {

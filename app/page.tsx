@@ -1,7 +1,11 @@
 import Image from "next/image";
+import { Borel } from "next/font/google";
 import SiteNav from "./site-nav";
+import { ProfileName } from "./demos/DiaShimmer";
 import reasonedLogo from "@/public/reasoned-logo.png";
 import founderDiaryLogo from "@/public/founder-diary-logo.png";
+
+const borel = Borel({ weight: "400", subsets: ["latin"], display: "swap" });
 
 const experience = [
   {
@@ -42,7 +46,7 @@ export default function Home() {
             />
           </div>
           <div className="profile-intro">
-            <h1 id="profile-name">Gihan Ariyasena</h1>
+            <ProfileName className={borel.className} />
             <p>Software Developer &amp; Computer Science Student</p>
           </div>
           <nav className="profile-links" aria-label="Social and contact links">
