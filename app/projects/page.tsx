@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteNav from "../site-nav";
+import PageContent from "../page-content";
 import BouncingBall from "../demos/BouncingBall";
 import DiaShimmer from "../demos/DiaShimmer";
 import Confetti from "../demos/Confetti";
@@ -54,7 +55,7 @@ export default function Projects() {
   return (
     <div className="portfolio">
       <SiteNav />
-      <main aria-labelledby="projects-heading">
+      <PageContent labelledBy="projects-heading">
         <section className="repository-projects" aria-labelledby="projects-heading">
           <h1 id="projects-heading" className="about-heading">Projects</h1>
           <ul className="text-project-list">
@@ -107,7 +108,7 @@ export default function Projects() {
             ))}
           </div>
         </section>
-      </main>
+      </PageContent>
     </div>
   );
 }

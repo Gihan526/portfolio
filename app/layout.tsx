@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import SwipeNavigation from "./swipe-navigation";
 
 export const metadata: Metadata = {
   title: "Gihan Ariyasena",
@@ -23,7 +24,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SwipeNavigation />
+        {children}
+      </body>
     </html>
   );
 }

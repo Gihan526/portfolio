@@ -14,11 +14,12 @@ export default function SiteNav() {
   const currentSection = pathname;
 
   return (
-    <nav className="site-nav" aria-label="Main navigation">
-      {links.map((link) => (
+    <nav className="site-nav" aria-label="Main navigation" style={{ viewTransitionName: "site-nav" }}>
+      {links.map((link, index) => (
         <Link
           key={link.href}
           href={link.href}
+          transitionTypes={[index > links.findIndex((item) => item.href === pathname) ? "nav-forward" : "nav-back"]}
           aria-current={currentSection === link.href ? "location" : undefined}
         >
           {link.label}

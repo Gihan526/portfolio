@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteNav from "../site-nav";
+import PageContent from "../page-content";
 
 export const metadata: Metadata = {
   title: "About — Gihan Ariyasena",
@@ -9,7 +10,7 @@ export default function About() {
   return (
     <div className="portfolio">
       <SiteNav />
-      <main aria-labelledby="about-heading">
+      <PageContent labelledBy="about-heading">
         <h1 id="about-heading" className="about-heading">About</h1>
         <div className="profile-bio">
           <p>
@@ -29,7 +30,7 @@ export default function About() {
             {" "}award at the Hemas AIthon.
           </p>
         </div>
-      </main>
+      </PageContent>
     </div>
   );
 }

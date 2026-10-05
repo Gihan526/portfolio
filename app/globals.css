@@ -5,8 +5,55 @@
   --background: #ffffff;
   --foreground: #25262b;
   --secondary: #6e6e73;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --font-system: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI",
     Arial, sans-serif;
+}
+
+/* Keep navigation anchored while page content fades and moves in its direction. */
+::view-transition-group(page-content),
+::view-transition-group(site-nav) {
+  animation: none;
+}
+
+::view-transition-old(site-nav) { display: none; }
+::view-transition-new(site-nav) { animation: none; }
+
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; }
+
+::view-transition-old(.page-forward),
+::view-transition-old(.page-back),
+::view-transition-old(.page-fade) {
+  animation: page-leave 160ms var(--ease-out) both;
+}
+
+::view-transition-new(.page-forward),
+::view-transition-new(.page-back),
+::view-transition-new(.page-fade) {
+  animation: page-arrive 220ms var(--ease-out) both;
+}
+
+::view-transition-old(.page-forward) { --page-offset: -12px; }
+::view-transition-new(.page-forward) { --page-offset: 12px; }
+::view-transition-old(.page-back) { --page-offset: 12px; }
+::view-transition-new(.page-back) { --page-offset: -12px; }
+
+@keyframes page-leave {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(var(--page-offset, 0px)); }
+}
+
+@keyframes page-arrive {
+  from { opacity: 0; transform: translateX(var(--page-offset, 0px)); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.page-forward),
+  ::view-transition-old(.page-back),
+  ::view-transition-new(.page-forward),
+  ::view-transition-new(.page-back) { --page-offset: 0px; }
 }
 
 @theme inline {

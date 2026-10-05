@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Borel } from "next/font/google";
 import SiteNav from "./site-nav";
+import PageContent from "./page-content";
 import { ProfileName } from "./demos/DiaShimmer";
 import reasonedLogo from "@/public/reasoned-logo.png";
 import founderDiaryLogo from "@/public/founder-diary-logo.png";
@@ -33,7 +34,7 @@ export default function Home() {
   return (
     <div className="portfolio" id="home">
       <SiteNav />
-      <main aria-labelledby="profile-name">
+      <PageContent labelledBy="profile-name">
         <header className="profile">
           <div className="profile-photo">
             <Image
@@ -95,7 +96,7 @@ export default function Home() {
         </section>
 
 
-      </main>
+      </PageContent>
     </div>
   );
 }
