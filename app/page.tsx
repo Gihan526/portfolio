@@ -48,7 +48,7 @@ export default function Home() {
           </div>
           <div className="profile-intro">
             <ProfileName className={borel.className} />
-            <p>Software Developer &amp; Computer Science Student</p>
+            <p>Software Engineer</p>
           </div>
           <nav className="profile-links" aria-label="Social and contact links">
             <a href="https://github.com/Gihan526" target="_blank" rel="noopener noreferrer" aria-label="GitHub">github</a>
