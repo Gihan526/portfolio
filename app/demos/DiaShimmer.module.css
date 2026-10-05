@@ -1,0 +1,45 @@
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  min-height: 160px;
+  background: #fff;
+}
+.word {
+  display: flex;
+  padding: 6px;
+  border: 0;
+  background: none;
+  color: #191919;
+  font: inherit;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.word:focus-visible { outline: 2px solid #25262b; outline-offset: 6px; border-radius: 4px; }
+.letter { position: relative; display: block; isolation: isolate; transform-origin: 50% 70%; }
+.ink { display: block; }
+.color, .glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(90deg,
+    #1B3E9E 0%, #2056E2 7%, #3076E0 14%, #6AA3D2 23%,
+    #C1D9F2 33%, #E6E8DB 40%, #F4DC77 49%, #FBD033 57%,
+    #FC8817 63%, #FA4F3D 69%, #FC2D95 75%, #FD35E6 82%,
+    #FD9FFA 90%, #FCE7FD 100%);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+}
+.glow { z-index: -1; filter: blur(7px); }
+.hint { color: #6e6e73; font-size: 11px; }
