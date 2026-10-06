@@ -38,7 +38,7 @@ function HomeSection() {
           <IconBrandGithub size={24} stroke={2} aria-hidden="true" />
         </a>
         <a
-          href="https://www.linkedin.com/in/gihan-ariyasena-267123357"
+          href="https://www.linkedin.com/in/gihan-ariyasena"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="LinkedIn"

@@ -52,7 +52,7 @@ export default function Home() {
           </div>
           <nav className="profile-links" aria-label="Social and contact links">
             <a href="https://github.com/Gihan526" target="_blank" rel="noopener noreferrer" aria-label="GitHub">github</a>
-            <a href="https://www.linkedin.com/in/gihan-ariyasena-267123357" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">linkedin</a>
+            <a href="https://www.linkedin.com/in/gihan-ariyasena" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">linkedin</a>
             <a href="https://x.com/gihan_ahk" target="_blank" rel="noopener noreferrer" aria-label="X">x</a>
             <a href="mailto:gihanariyasena526@gmail.com">email</a>
             <a href="/Gihan_Resume.pdf" target="_blank" rel="noopener noreferrer">resume</a>
